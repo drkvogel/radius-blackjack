@@ -97,7 +97,22 @@ Casino operators generally publish their specific blackjack rules online.
 
 ### Blackjack Jargon
 
-SOFT - An ace & card with a value lower then 10 is referred to as a 'SOFT' hand, because the value is flexible, i.e. a ace & 7 can equal 18 or 8.
 
-HARD - A hand without aces are referred to as 'HARD' hands, because their values are definite.
+Hit - take a card
+
+Stand - end their turn
+
+Double - double wager, take a single card and finish
+
+Split - if the two cards have the same value, separate them to make two hands
+
+Surrender - give up a half-bet and retire from the game
+
+Push? - tied score, known as "push" or "standoff",
+
+Soft - an ace and card with a value lower then 10 is referred to as a 'soft' hand, because the value is flexible, i.e. a ace & 7 can equal 18 or 8.
+
+Hard - a hand without aces are referred to as 'hard' hands, because their values are definite.
+
+"twist" (hit), "stick" (stand) and "buy" (double the bet)
 

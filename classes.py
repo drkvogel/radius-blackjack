@@ -3,10 +3,13 @@
 
 class Game():
     #
+    pass
 
 class Player():
     #
+    pass
 
 class Hand():
     #
+    pass
 
