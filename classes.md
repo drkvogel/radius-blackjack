@@ -5,6 +5,7 @@
 
 game
 hand
+  cards
 stake
 card
 insurance
