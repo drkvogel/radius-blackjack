@@ -11,12 +11,16 @@ insurance
 dealer
 player
 rules
+purse?
 
 ## actions (verbs)
 
 hit
 split
 stand
+push? = draw
+split?
+double?
 
 hit
 stick

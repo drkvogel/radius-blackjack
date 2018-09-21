@@ -12,7 +12,7 @@ See spec.md for task specification
 * Provide a leaderboard
 
 
-# Notes
+## Notes
 
 I had to Google a few things:
 
