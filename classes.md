@@ -15,6 +15,10 @@ rules
 ## actions (verbs)
 
 hit
+split
+stand
+
+hit
 stick
 twist
 stand
