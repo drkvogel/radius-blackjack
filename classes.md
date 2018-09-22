@@ -13,25 +13,28 @@ dealer
 player
 rules
 purse?
+bankroll - amount of money set aside to gamble with
+Ante:An initial bet required (usually in card games) before a hand can start.
+Bet:An amount of money put at risk for the chance of winning.
+winnings
+
 
 ## actions (verbs)
 
 hit
+stand
 split
-stand
-push? = draw
-split?
-double?
-
-hit
-stick
-twist
-stand
 surrender
-play
-draw
-bust
+double? double down?
 
+Stick (pontoon) aka stand in blackjack
+twist (pontoon) = hit (blackjack)
+play
+
+## events
+
+bust
+push = draw
 
 
 ## via [TextBlob Noun Phrase Extraction] (http://textanalysisonline.com/textblob-noun-phrase-extraction)
