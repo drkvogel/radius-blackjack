@@ -10,19 +10,30 @@ import curses
 import getpass
 import random
 import time
-# import termios, fcntl, sys, os
 
 class Game:
-    def Game(self, _players, _minimum_bet=1, _maximum_bet=5000):
-        players = _players
-        minimum_bet = _minimum_bet
-        maximum_bet = _maximum_bet
+    card_names = ["Ace", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
+    actions = {
+        "b": "bet",
+        "d": "deal",
+        "q": "Quit",
+        "h": "Hit",
+        "s": "Stand",
+        "p": "Split",
+        "o": "Double",
+        "r": "Surrender"
+    }
+    def __init__(self, _minimum_bet=1, _maximum_bet=5000, _bet_increment=50):   # _players, 
+        # players = []  # ?
+        # self.players = _players
+        self.minimum_bet = _minimum_bet
+        self.maximum_bet = _maximum_bet
+        self.bet_increment = _bet_increment
 
 """
 Simulate a standard(?) 52-card deck of cards
 TODO: different pack types?
-pack or deck?
-TDD for this?
+TODO: TDD for this?
 """
 class Deck:
     cards = []
@@ -45,9 +56,17 @@ class Deck:
         random.shuffle(self.cards)
         time.sleep(sleep_time)
 
-class Player:
-    def Player(self, _name, _bankroll=10000):
+    def pick(self):
+        return self.cards.pop() # ?
+
+class Participant:
+    def __init__(self, _name):
         self.name = _name
+        self.cards = []
+
+class Player(Participant):
+    def __init__(self, _name, _bankroll=10000):
+        # self.name = _name
         self.cards = []
         self.bank = _bankroll
         self.bet = 0
@@ -67,7 +86,15 @@ class Player:
 
 class Dealer: # inherit from superclass common to Player?
     cards = []
+    def __init__(self):
+        pass
 
+    def deal(self):
+        pass
+
+"""
+Dimensions for curses screen
+"""
 class Dims:
     YPOS_TITLE = 0
     YPOS_DEALER_NAME = 3
@@ -81,113 +108,77 @@ class Dims:
     YPOS_ACTION = 14
     YPOS_DEBUG = 20
 
-def show_status():
-    print()
+# def show_status():
+#     print()
 
+"""
+Utility function for curses - print a string right-padded with spaces to a certain width
+to blank out any existing text on that line
+"""
 def rpad(string, width=80):
     num = width - len(string)
     return string + ' '*num
 
-def play(name): # (stdscr)
+def play(name):
     # build a new window
-    begin_x = 0; begin_y = 0
-    height = 15; width = 40
-    win = curses.newwin(height, width, begin_y, begin_x)
-    stdscr.refresh()
-
-    # YPOS_TITLE = 0
-    # YPOS_DEALER_NAME = 3
-    # YPOS_DEALER_HAND = 4
-    # YPOS_PLAYER_NAME = 6
-    # YPOS_PLAYER_HAND = 7
-    # YPOS_PLAYER_BANK = 9
-    # YPOS_PLAYER_BET = 10
-    # YPOS_PLAYER_WINNINGS = 11
-    # YPOS_KEYS = 13
-    # YPOS_ACTION = 14
-    # YPOS_DEBUG = 20
+    win = curses.newwin(15, 40, 0, 0)    # height, width, y, x
 
     stdscr.addstr(Dims.YPOS_TITLE, 0, "Blackjack by Chris Bird (chrisjbird@gmail.com)")
     stdscr.addstr(Dims.YPOS_DEALER_NAME, 0, "Dealer:")
     stdscr.addstr(Dims.YPOS_PLAYER_NAME, 0, name + ":")
-    stdscr.addstr(Dims.YPOS_KEYS, 0, "(d)eal (b)et (h)it (s)tand s(p)lit (d)ouble su(r)render (q)uit")
-
-    card_names = ["Ace", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
-
-    stdscr.addstr(Dims.YPOS_ACTION, 0, rpad("Shuffling..."))
+    stdscr.addstr(Dims.YPOS_KEYS, 0, "(d)eal (b)et (h)it (s)tand s(p)lit d(o)uble su(r)render (q)uit")
     stdscr.refresh()
-    deck = []
-    deck += 4 * [1]
-    deck += 4 * [2]
-    deck += 4 * [3]
-    deck += 4 * [4]
-    deck += 4 * [5]
-    deck += 4 * [6]
-    deck += 4 * [7]
-    deck += 4 * [9]
-    deck += 4 * [10]
-    deck += 4 * [11]
-    deck += 4 * [12]
-    deck += 4 * [13]
-    random.shuffle(deck)
-    time.sleep(1)
-    debug_text = str(deck)
+
+    game = Game()
+
+    deck = Deck()
+    stdscr.addstr(Dims.YPOS_ACTION, 0, rpad("Shuffling..."))
+    deck.shuffle()
     stdscr.addstr(Dims.YPOS_ACTION, 0, rpad(""))
 
+    dealer = Dealer()
+    player = Player(name)
+
     # test
-    cards_dealer = []
-    # cards_dealer += [5, 2, 12, 10]
-
-    cards_player = []
-    # cards_player += [4, 1, 3, 13, 8]
-
-    bank = 10000
-    winnings = 0
-    bet = 0
-    BET_INCREMENT = 50
-
-    actions = {
-        "b": "bet",
-        "d": "deal",
-        "q": "Quit",
-        "h": "Hit",
-        "s": "Stand",
-        "p": "Split",
-        "d": "Double",
-        "r": "Surrender"
-    }
+    dealer.cards += [5, 2, 12, 10]
+    player.cards += [4, 1, 3, 13, 8]
+    # player.bank = 10000
+    # winnings = 0
+    # bet = 0
 
     while True:
-        stdscr.addstr(Dims.YPOS_DEALER_HAND, 0, str(sum(cards_dealer)) + ": " + str([card_names[card] for card in cards_dealer]))
-        stdscr.addstr(Dims.YPOS_PLAYER_HAND, 0, str(sum(cards_player)) + ": " + str([card_names[card] for card in cards_player]))
-        stdscr.addstr(Dims.YPOS_PLAYER_BANK, 0, "Bank: £" + str(bank))
-        stdscr.addstr(Dims.YPOS_PLAYER_WINNINGS, 0, "Winnings: £" + str(winnings))
-        stdscr.addstr(Dims.YPOS_PLAYER_BET, 0, "Bet: £" + str(bet))
+        stdscr.addstr(Dims.YPOS_DEALER_HAND, 0, str(sum(dealer.cards)) + ": " + str([Game.card_names[card] for card in dealer.cards]))
+        stdscr.addstr(Dims.YPOS_PLAYER_HAND, 0, str(sum(player.cards)) + ": " + str([Game.card_names[card] for card in player.cards]))
+        stdscr.addstr(Dims.YPOS_PLAYER_BANK, 0, "Bank: £" + str(player.bank))
+        stdscr.addstr(Dims.YPOS_PLAYER_WINNINGS, 0, "Winnings: £" + str(player.winnings))
+        stdscr.addstr(Dims.YPOS_PLAYER_BET, 0, "Bet: £" + str(player.bet))
+        debug_text = str(deck.cards)
         stdscr.addstr(Dims.YPOS_DEBUG, 0, debug_text)
         # stdscr.addstr(YPOS_PLAYER_BANK, 0, "Winnings: £" + str(winnings) + ", Bank: £" + str(bank) + ", Bet: £" + str(bet))
         stdscr.refresh()
 
         c = stdscr.getch() # c = win.getch()
-        if c == ord('b'):       # bet
-            bank -= BET_INCREMENT
-            bet += BET_INCREMENT
-        if c == ord('d'):       # deal
-            card = deck.pick()
-        if c == ord('q'):       # quit
-            break
-        elif c == ord('h'):     # hit
+        if c == ord('b'):                           # bet
+            player.bank -= game.bet_increment
+            player.bet += game.bet_increment
+        elif c == ord('d'):                         # deal
+            player.cards.append(deck.pick())
+            player.cards.append(deck.pick())
+        elif c == ord('h'):                         # hit
             stdscr.addstr(1, 0, "")
             pass
-        elif c == ord('s'):     # stand
+        elif c == ord('s'):                         # stand
             pass
-        elif c == ord('p'):     # split
+        elif c == ord('p'):                         # split
             pass
-        elif c == ord('d'):     # double
+        elif c == ord('d'):                         # double
             pass
-        elif c == ord('r'):     # surrender
+        elif c == ord('r'):                         # surrender
             pass
+        elif c == ord('q'):                         # quit
+            break
         try:
-            action = actions[chr(c)]
+            action = Game.actions[chr(c)]
         except KeyError:
             action = "Action not found: '" + str(chr(c)) + "'"  # TODO: Use string interpolation 
         stdscr.addstr(Dims.YPOS_ACTION, 0, rpad(action))
@@ -196,7 +187,7 @@ def play(name): # (stdscr)
 if __name__ == "__main__":
     print ("Welcome to Blackjack")
     default = getpass.getuser()
-    name = input("What's your name? [" + default + "]: ")
+    name = input("Enter your name to start [" + default + "]: ")
     if name == "":
         name = default
     try:
@@ -209,7 +200,7 @@ if __name__ == "__main__":
         # play
         play(name)
     finally:
-        # restore command line
+        # restore command line environment
         curses.nocbreak()
         stdscr.keypad(False)
         curses.echo()
