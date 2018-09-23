@@ -20,7 +20,6 @@ separate game logic out in order to provide different UIs, e.g. command line, cu
 dash or whatever for those offline moments
 
 
-python distributed - Google Search (https://www.google.co.uk/search?q=python+distributed&oq=python+distributed+&aqs=chrome..69i57j69i64.5646j0j7&sourceid=chrome&ie=UTF-8)
 Distributed programming in Python - Stack Overflow (https://stackoverflow.com/questions/10266531/distributed-programming-in-python)
 how to make a networked game in python - Google Search (https://www.google.co.uk/search?ei=hCelW5q0BomKgAaNoIG4Dw&q=how+to+make+a+networked+game+in+python&oq=how+to+make+a+networked+game+in+python&gs_l=psy-ab.3..0i22i30k1.18918.29742.0.32450.50.40.3.2.3.0.375.4967.2j19j5j2.29.0....0...1c.1.64.psy-ab..17.32.4731.6..0j0i131k1j0i67k1j35i39k1j0i13k1j33i22i29i30k1j33i10k1.84.qtoPRHj4J8g)
 Python Game Networking - Stack Overflow (https://stackoverflow.com/questions/29440764/python-game-networking)
