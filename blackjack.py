@@ -129,7 +129,6 @@ def rpad(string, width=80):
 def play(name):
     # build a new window
     win = curses.newwin(15, 40, 0, 0)    # height, width, y, x
-
     stdscr.addstr(Dims.YPOS_TITLE, 0, "Blackjack by Chris Bird (chrisjbird@gmail.com)")
     stdscr.addstr(Dims.YPOS_DEALER_NAME, 0, "Dealer:")
     stdscr.addstr(Dims.YPOS_PLAYER_NAME, 0, name + ":")
@@ -146,13 +145,6 @@ def play(name):
     dealer = Dealer()
     player = Player(name)
 
-    # test
-    dealer.cards += [5, 2, 12, 10]
-    player.cards += [4, 1, 3, 13, 8]
-    # player.bank = 10000
-    # winnings = 0
-    # bet = 0
-
     while True:
         stdscr.addstr(Dims.YPOS_DEALER_HAND, 0, rpad(str(sum(dealer.cards)) + ": " + str([Game.card_names[card] for card in dealer.cards])))
         stdscr.addstr(Dims.YPOS_PLAYER_HAND, 0, rpad(str(sum(player.cards)) + ": " + str([Game.card_names[card] for card in player.cards])))
@@ -161,15 +153,12 @@ def play(name):
         stdscr.addstr(Dims.YPOS_PLAYER_BET, 0, rpad("Bet: £" + str(player.stake)))
         debug_text = rpad(str(deck.cards), 180)  # can be at least 165 chars long
         stdscr.addstr(Dims.YPOS_DEBUG, 0, rpad(debug_text))
-        # stdscr.addstr(YPOS_PLAYER_BANK, 0, "Winnings: £" + str(winnings) + ", Bank: £" + str(bank) + ", Bet: £" + str(bet))
         stdscr.refresh()
 
         c = stdscr.getch() # c = win.getch()
         if c == ord('b'):                           # bet
-            # player.bank -= game.bet_increment
-            # player.bet += game.bet_increment
             try:
-                player.bet()
+                player.bet(game.bet_increment)
             except:
                 pass    # TODO provide feedback - out of money
         elif c == ord('d'):                         # deal

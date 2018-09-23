@@ -5,10 +5,11 @@ See spec.md for task specification
 
 ## What I would do if I had more time
 
-* Use Test-Driven Development (`unittest`)
+* Use Test-Driven Development (e.g. `unittest`)
 * Build an AI to play the dealer
 * Provide a better UI - if not graphical, than at least a Text User Interface (TUI) rather than scrolling text
 * Support multiple players across the network
+* User testing
 * Provide a leaderboard
 
 

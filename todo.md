@@ -1,35 +1,23 @@
 
+# notes
+
+Casino Glossary - Words & Phrases Used in the Casino (https://www.gamblingsites.org/casino/glossary/)
+247 Blackjack (http://www.247blackjack.com/)
+
 # todo
 
-clone eis-react and/or teachplus, look at classes-/
-dash or whatever for those offline moments, like now
-
-requirements.txt?
-
-The objective of the game is to beat the dealer in one of the following ways:
-
-Get 21 points on the player's first two cards (called a "blackjack" or "natural"), without a dealer blackjack;
-Reach a final score higher than the dealer without exceeding 21; or
-Let the dealer draw additional cards until their hand exceeds 21.
-
+use python2 for compatibility
+requirements.txt
 state machine
-
 rudimentary ai
-better to do machine learning, though
+make module
 
-The value of cards two through ten is their pip value (2 through 10). Face cards (Jack, Queen, and King) are all worth ten. Aces can be worth one or eleven.
+## defer
 
-Maximum Bet:The highest amount a player can stake on any one bet.
-Minimum Bet:The lowest amount a player can stake on any one bet.
-
-Split
-In the game of blackjack, a player may have the opportunity to ‘split’ their hand. This happens when their two cards are the same face value. Then the player can place an equal bet next to their original bet and play two separate hands. The benefit of this is having the opportunity to win more, but likewise, more money is put at risk.
-
-Insurance
-Blackjack insurance is a bet on the odds of probability. When the dealer’s face-up card is an ace, you have the option to “take insurance” before the dealer checks the “hole card”.
-
-
-
+make multiplayer, with Twisted or similar
+machine learning
+separate game logic out in order to provide different UIs, e.g. command line, curses, web
+dash or whatever for those offline moments
 
 
 python distributed - Google Search (https://www.google.co.uk/search?q=python+distributed&oq=python+distributed+&aqs=chrome..69i57j69i64.5646j0j7&sourceid=chrome&ie=UTF-8)
@@ -44,3 +32,7 @@ twisted vs flask - Google Search (https://www.google.co.uk/search?q=twisted+vs+f
 ## done
 
 pack or deck? deck
+clone eis-react and/or teachplus, look at classes-/
+
+Maximum Bet:The highest amount a player can stake on any one bet.
+Minimum Bet:The lowest amount a player can stake on any one bet.
