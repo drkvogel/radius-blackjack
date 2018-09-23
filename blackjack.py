@@ -69,8 +69,15 @@ class Player(Participant):
         # self.name = _name
         self.cards = []
         self.bank = _bankroll
-        self.bet = 0
+        self.stake = 0
         self.winnings = 0
+
+    def bet(self, increment=50):
+        if self.bank >= increment:
+            self.stake += increment
+            self.bank -= increment
+        else:
+            raise "Out of cash" # TODO ?
 
     def hit(self):
         pass
@@ -147,23 +154,30 @@ def play(name):
     # bet = 0
 
     while True:
-        stdscr.addstr(Dims.YPOS_DEALER_HAND, 0, str(sum(dealer.cards)) + ": " + str([Game.card_names[card] for card in dealer.cards]))
-        stdscr.addstr(Dims.YPOS_PLAYER_HAND, 0, str(sum(player.cards)) + ": " + str([Game.card_names[card] for card in player.cards]))
-        stdscr.addstr(Dims.YPOS_PLAYER_BANK, 0, "Bank: £" + str(player.bank))
-        stdscr.addstr(Dims.YPOS_PLAYER_WINNINGS, 0, "Winnings: £" + str(player.winnings))
-        stdscr.addstr(Dims.YPOS_PLAYER_BET, 0, "Bet: £" + str(player.bet))
-        debug_text = str(deck.cards)
-        stdscr.addstr(Dims.YPOS_DEBUG, 0, debug_text)
+        stdscr.addstr(Dims.YPOS_DEALER_HAND, 0, rpad(str(sum(dealer.cards)) + ": " + str([Game.card_names[card] for card in dealer.cards])))
+        stdscr.addstr(Dims.YPOS_PLAYER_HAND, 0, rpad(str(sum(player.cards)) + ": " + str([Game.card_names[card] for card in player.cards])))
+        stdscr.addstr(Dims.YPOS_PLAYER_BANK, 0, rpad("Bank: £" + str(player.bank)))
+        stdscr.addstr(Dims.YPOS_PLAYER_WINNINGS, 0, rpad("Winnings: £" + str(player.winnings)))
+        stdscr.addstr(Dims.YPOS_PLAYER_BET, 0, rpad("Bet: £" + str(player.stake)))
+        debug_text = rpad(str(deck.cards), 180)  # can be at least 165 chars long
+        stdscr.addstr(Dims.YPOS_DEBUG, 0, rpad(debug_text))
         # stdscr.addstr(YPOS_PLAYER_BANK, 0, "Winnings: £" + str(winnings) + ", Bank: £" + str(bank) + ", Bet: £" + str(bet))
         stdscr.refresh()
 
         c = stdscr.getch() # c = win.getch()
         if c == ord('b'):                           # bet
-            player.bank -= game.bet_increment
-            player.bet += game.bet_increment
+            # player.bank -= game.bet_increment
+            # player.bet += game.bet_increment
+            try:
+                player.bet()
+            except:
+                pass    # TODO provide feedback - out of money
         elif c == ord('d'):                         # deal
-            player.cards.append(deck.pick())
-            player.cards.append(deck.pick())
+            try:
+                player.cards.append(deck.pick())
+                player.cards.append(deck.pick())
+            except: # IndexError
+                pass    # TODO provide feedback - no more cards
         elif c == ord('h'):                         # hit
             stdscr.addstr(1, 0, "")
             pass
