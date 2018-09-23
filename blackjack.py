@@ -12,6 +12,17 @@ import getpass
 import random
 import time
 
+import backtrace
+
+backtrace.hook(
+    reverse=False,
+    align=False,
+    strip_path=False,
+    enable_on_envvar_only=False,
+    on_tty=False,
+    conservative=False,
+    styles={})
+
 class Game:
     card_names = ["Ace", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
     actions = {
@@ -58,7 +69,8 @@ class Deck:
         time.sleep(sleep_time)
 
     def pick(self):
-        return self.cards.pop() # ?
+        # if self.cards:
+            return self.cards.pop() # ?
 
 class Participant:
     def __init__(self, _name):
@@ -137,12 +149,10 @@ def play(name):
     stdscr.refresh()
 
     game = Game()
-
     deck = Deck()
     stdscr.addstr(Dims.YPOS_ACTION, 0, rpad("Shuffling..."))
     deck.shuffle()
     stdscr.addstr(Dims.YPOS_ACTION, 0, rpad(""))
-
     dealer = Dealer()
     player = Player(name)
 
@@ -163,10 +173,12 @@ def play(name):
             except:
                 pass    # TODO provide feedback - out of money
         elif c == ord('d'):                         # deal
+            # player.cards.append(deck.pick())
+            # player.cards.append(deck.pick())
             try:
                 player.cards.append(deck.pick())
                 player.cards.append(deck.pick())
-            except: # IndexError
+            except: # IndexError?
                 pass    # TODO provide feedback - no more cards
         elif c == ord('h'):                         # hit
             stdscr.addstr(1, 0, "")
