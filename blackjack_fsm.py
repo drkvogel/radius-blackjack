@@ -11,20 +11,12 @@ import curses
 import getpass
 import random
 import time
-
+import datetime
 import backtrace
 
-backtrace.hook(
-    reverse=False,
-    align=False,
-    strip_path=False,
-    enable_on_envvar_only=False,
-    on_tty=False,
-    conservative=False,
-    styles={})
+backtrace.hook(reverse=False, align=False, strip_path=False, enable_on_envvar_only=False, on_tty=False, conservative=False, styles={})
 
 class Game:
-    card_names = ["Ace", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
     actions = {
         "b": "bet",
         "d": "deal",
@@ -45,10 +37,11 @@ class Game:
 """
 Simulate a standard(?) 52-card deck of cards
 TODO: different pack types?
-TODO: TDD for this?
+TODO: test
 """
 class Deck:
-    cards = []
+    card_names = ["Ace", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
+
     def __init__(self):
         self.cards = []
         self.cards += 4 * [1]
@@ -71,6 +64,37 @@ class Deck:
     def pick(self):
         # if self.cards:
             return self.cards.pop() # ?
+
+"""
+The value of cards two through ten is their pip value (2 through 10). 
+Face cards (Jack, Queen, and King) are all worth ten. 
+Aces can be worth one or eleven.
+"""
+class Hand():
+    def __init__(self):
+        self.cards = []
+    def add(self, card):
+        self.cards.append(card)
+    def min_value(self):
+        value = 0
+        for card in self.cards:
+            if card >= 1 and card <= 10:    # ace - ten
+                value += card
+            elif card >= 11 and card <= 13: # jack, queen, king
+                value += 10
+            else:
+                raise "Invalid card value: " + str(card)
+    def max_value(self):
+        value = 0
+        for card in self.cards:
+            if card == 1:                   # ace
+                value += 11
+            elif card >= 2 and card <= 10:  # two - ten
+                value += card
+            elif card >= 11 and card <= 13: # jack, queen, king
+                value += 10
+            else:
+                raise "Invalid card value: " + str(card)
 
 class Participant:
     def __init__(self, _name):
@@ -126,10 +150,22 @@ class Curses_UI:
     YPOS_PLAYER_WINNINGS = 11
     YPOS_KEYS = 13
     YPOS_ACTION = 14
+    YPOS_STATUS = 17
+    XPOS_STATUS = 10
     YPOS_DEBUG = 20
 
-# def show_status():
-#     print()
+def show_status(message):
+    stdscr.addstr(Curses_UI.YPOS_STATUS, Curses_UI.XPOS_STATUS, rpad(message))
+    stdscr.refresh()
+
+def show_header():
+    # build a new window
+    win = curses.newwin(15, 40, 0, 0)    # height, width, y, x
+    stdscr.addstr(Curses_UI.YPOS_TITLE, 0, "Blackjack by Chris Bird (chrisjbird@gmail.com)")
+    stdscr.addstr(Curses_UI.YPOS_DEALER_NAME, 0, "Dealer:")
+    stdscr.addstr(Curses_UI.YPOS_PLAYER_NAME, 0, name + ":")
+    stdscr.addstr(Curses_UI.YPOS_KEYS, 0, "(d)eal (b)et (h)it (s)tand s(p)lit d(o)uble su(r)render (q)uit")
+    stdscr.refresh()
 
 """
 Utility function for curses - print a string right-padded with spaces to a certain width
@@ -139,26 +175,32 @@ def rpad(string, width=80):
     num = width - len(string)
     return string + ' '*num
 
-def play(name):
-    # build a new window
-    win = curses.newwin(15, 40, 0, 0)    # height, width, y, x
-    stdscr.addstr(Curses_UI.YPOS_TITLE, 0, "Blackjack by Chris Bird (chrisjbird@gmail.com)")
-    stdscr.addstr(Curses_UI.YPOS_DEALER_NAME, 0, "Dealer:")
-    stdscr.addstr(Curses_UI.YPOS_PLAYER_NAME, 0, name + ":")
-    stdscr.addstr(Curses_UI.YPOS_KEYS, 0, "(d)eal (b)et (h)it (s)tand s(p)lit d(o)uble su(r)render (q)uit")
-    stdscr.refresh()
 
+S_PLACE_BETS, S_BLACKJACK = range(2)
+def transition_dummy():
+    pass
+
+fsm = FSM_MAP = ( #  {'src':, 'dst':, 'condition':, 'callback': },
+    {'src': S_PLACE_BETS,    'dst': S_BLACKJACK,       'condition': "[A-Za-z|+|-|\d]", 'callback': transition_dummy}
+)
+
+def play(name):
+    show_header()
     game = Game()
     deck = Deck()
-    stdscr.addstr(Curses_UI.YPOS_ACTION, 0, rpad("Shuffling..."))
+    # stdscr.addstr(Dims.YPOS_ACTION, 0, rpad("Shuffling..."))
+    show_status("Shuffling...")
+    stdscr.refresh()
     deck.shuffle()
-    stdscr.addstr(Curses_UI.YPOS_ACTION, 0, rpad(""))
+    time.sleep(1)
+    show_status("")
+    stdscr.refresh()
     dealer = Dealer()
     player = Player(name)
 
     while True:
-        stdscr.addstr(Curses_UI.YPOS_DEALER_HAND, 0, rpad(str(sum(dealer.cards)) + ": " + str([Game.card_names[card] for card in dealer.cards])))
-        stdscr.addstr(Curses_UI.YPOS_PLAYER_HAND, 0, rpad(str(sum(player.cards)) + ": " + str([Game.card_names[card] for card in player.cards])))
+        stdscr.addstr(Curses_UI.YPOS_DEALER_HAND, 0, rpad(str(sum(dealer.cards)) + ": " + str([Deck.card_names[card] for card in dealer.cards])))
+        stdscr.addstr(Curses_UI.YPOS_PLAYER_HAND, 0, rpad(str(sum(player.cards)) + ": " + str([Deck.card_names[card] for card in player.cards])))
         stdscr.addstr(Curses_UI.YPOS_PLAYER_BANK, 0, rpad("Bank: £" + str(player.bank)))
         stdscr.addstr(Curses_UI.YPOS_PLAYER_WINNINGS, 0, rpad("Winnings: £" + str(player.winnings)))
         stdscr.addstr(Curses_UI.YPOS_PLAYER_BET, 0, rpad("Bet: £" + str(player.stake)))
@@ -173,8 +215,6 @@ def play(name):
             except:
                 pass    # TODO provide feedback - out of money
         elif c == ord('d'):                         # deal
-            # player.cards.append(deck.pick())
-            # player.cards.append(deck.pick())
             try:
                 player.cards.append(deck.pick())
                 player.cards.append(deck.pick())
@@ -193,6 +233,10 @@ def play(name):
             pass
         elif c == ord('q'):                         # quit
             break
+        elif c == ord('t'):                         # test
+            show_status("This is a test at " + str(datetime.datetime.now()))
+            time.sleep(1)
+            show_status("")
         try:
             action = Game.actions[chr(c)]
         except KeyError:

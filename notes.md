@@ -12,6 +12,9 @@ state machine
 rudimentary ai
 make module
 
+transition table of state changes
+start state, end state, condition, callback
+
 ## defer
 
 make multiplayer, with Twisted or similar
