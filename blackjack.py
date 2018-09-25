@@ -32,8 +32,8 @@ class Game:
         "s": "Stand",
         "p": "Split",
         "o": "Double",
-        "r": "Surrender"
-        "q": "Quit",
+        "r": "Surrender",
+        "q": "Quit"
     }
     def __init__(self, _minimum_bet=1, _maximum_bet=5000, _bet_increment=50):   # _players, 
         # players = []  # ?
@@ -162,8 +162,8 @@ def play(name):
         stdscr.addstr(Curses_UI.YPOS_PLAYER_BANK, 0, rpad("Bank: £" + str(player.bank)))
         stdscr.addstr(Curses_UI.YPOS_PLAYER_WINNINGS, 0, rpad("Winnings: £" + str(player.winnings)))
         stdscr.addstr(Curses_UI.YPOS_PLAYER_BET, 0, rpad("Bet: £" + str(player.stake)))
-        debug_text = rpad(str(deck.cards), 180)  # can be at least 165 chars long
-        stdscr.addstr(Curses_UI.YPOS_DEBUG, 0, rpad(debug_text))
+        # debug_text = rpad(str(deck.cards), 180)  # can be at least 165 chars long
+        # stdscr.addstr(Curses_UI.YPOS_DEBUG, 0, rpad(debug_text))
         stdscr.refresh()
 
         c = stdscr.getch() # c = win.getch()

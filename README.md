@@ -1,5 +1,5 @@
 
-# Radius Interview Python Programming Task
+# Radius Python Programming Task
 
 See spec.md for task specification
 
@@ -14,14 +14,14 @@ run from the command line:
 
 Press keys to play:
 
-        "b": "bet",
-        "d": "deal",
-        "q": "Quit",
-        "h": "Hit",
-        "s": "Stand",
-        "p": "Split",
-        "o": "Double",
+        "d": "Deal"
+        "b": "Bet"
+        "h": "Hit"
+        "s": "Stand"
+        "p": "Split"
+        "o": "Double"
         "r": "Surrender"
+        "q": "Quit"
 
 ## Todo
 
