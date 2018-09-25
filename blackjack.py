@@ -26,14 +26,14 @@ backtrace.hook(
 class Game:
     card_names = ["Ace", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King"]
     actions = {
-        "b": "bet",
-        "d": "deal",
-        "q": "Quit",
+        "d": "Deal",
+        "b": "Bet",
         "h": "Hit",
         "s": "Stand",
         "p": "Split",
         "o": "Double",
         "r": "Surrender"
+        "q": "Quit",
     }
     def __init__(self, _minimum_bet=1, _maximum_bet=5000, _bet_increment=50):   # _players, 
         # players = []  # ?
@@ -141,7 +141,7 @@ def rpad(string, width=80):
 
 def play(name):
     # build a new window
-    win = curses.newwin(15, 40, 0, 0)    # height, width, y, x
+    curses.newwin(15, 40, 0, 0)    # height, width, y, x
     stdscr.addstr(Curses_UI.YPOS_TITLE, 0, "Blackjack by Chris Bird (chrisjbird@gmail.com)")
     stdscr.addstr(Curses_UI.YPOS_DEALER_NAME, 0, "Dealer:")
     stdscr.addstr(Curses_UI.YPOS_PLAYER_NAME, 0, name + ":")

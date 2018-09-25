@@ -3,7 +3,27 @@
 
 See spec.md for task specification
 
-## What I would do if I had more time
+Requires Python 3
+
+## Playing
+
+run from the command line:
+
+    $ chmod u+x blackjack.py
+    $ ./blackjack.py
+
+Press keys to play:
+
+        "b": "bet",
+        "d": "deal",
+        "q": "Quit",
+        "h": "Hit",
+        "s": "Stand",
+        "p": "Split",
+        "o": "Double",
+        "r": "Surrender"
+
+## Todo
 
 * Use Test-Driven Development (e.g. `unittest`)
 * Build an AI to play the dealer
@@ -11,10 +31,3 @@ See spec.md for task specification
 * Support multiple players across the network
 * User testing
 * Provide a leaderboard
-
-
-## Notes
-
-I had to Google a few things:
-
-Capturing keyboard input: https://stackoverflow.com/questions/13207678/whats-the-simplest-way-of-detecting-keyboard-input-in-python-from-the-terminal?noredirect=1&lq=1

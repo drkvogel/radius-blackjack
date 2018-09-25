@@ -11,7 +11,7 @@ import curses
 import getpass
 import random
 import time
-import datetime
+import datetime 
 import backtrace
 
 backtrace.hook(reverse=False, align=False, strip_path=False, enable_on_envvar_only=False, on_tty=False, conservative=False, styles={})
@@ -176,12 +176,30 @@ def rpad(string, width=80):
     return string + ' '*num
 
 
-S_PLACE_BETS, S_BLACKJACK = range(2)
+STATE_PLACE_BETS, STATE_BETS_PLACED, STATE_PLAYER_TURN, STATE_DEALER_TURN, STATE_PLAYER_LOSS, STATE_PUSH, \
+    STATE_PLAYER_WIN, STATE_SURRENDER, STATE_QUIT = range(10)
+
+def transition_place_bets():
+    pass
 def transition_dummy():
     pass
 
 fsm = FSM_MAP = ( #  {'src':, 'dst':, 'condition':, 'callback': },
-    {'src': S_PLACE_BETS,    'dst': S_BLACKJACK,       'condition': "[A-Za-z|+|-|\d]", 'callback': transition_dummy}
+    {'src': STATE_PLACE_BETS,    'dst': STATE_BETS_PLACED,       'condition': "", 'callback': transition_place_bets},
+    {'src': STATE_BETS_PLACED,    'dst': STATE_PLAYER_TURN,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_PLAYER_TURN,    'dst': STATE_PLAYER_TURN,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_PLAYER_TURN,    'dst': STATE_PLAYER_WIN,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_PLAYER_TURN,    'dst': STATE_PLAYER_LOSS,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_PLAYER_TURN,    'dst': STATE_DEALER_TURN,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_DEALER_TURN,    'dst': STATE_PLAYER_WIN,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_DEALER_TURN,    'dst': STATE_PLAYER_LOSS,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_DEALER_TURN,    'dst': STATE_PUSH,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_PLAYER_WIN,    'dst': STATE_PLACE_BETS,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_PLAYER_LOSS,    'dst': STATE_PLACE_BETS,       'condition': "", 'callback': transition_dummy},
+    {'src': STATE_PUSH,    'dst': STATE_PLACE_BETS,       'condition': "", 'callback': transition_dummy},
+    {'src': "",    'dst': "",       'condition': "", 'callback': transition_dummy},
+    {'src': "",    'dst': "",       'condition': "", 'callback': transition_dummy},
+    {'src': "",    'dst': "",       'condition': "", 'callback': transition_dummy}
 )
 
 def play(name):
